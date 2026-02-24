@@ -1,0 +1,2535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ente Crush — Kerala's Most Dramatic Dating App</title>
+  <meta name="description" content="Kerala's most dramatic dating app. Verified by ZAuth. Certified by fate.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Sofia&family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Sans:wght@400;500;600&family=Cormorant+Garamond:ital,wght@1,400&family=Noto+Sans+Malayalam:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* ========================================
+   DESIGN TOKENS — DUSK MARIGOLD PALETTE
+   ======================================== */
+    :root {
+      /* Core Scale */
+      --color-bg: #1A0A00;
+      --color-surface: #2A1204;
+      --color-surface2: #3D1A00;
+      --color-border: rgba(196, 98, 45, 0.2);
+
+      /* Accent Scale */
+      --color-primary: #C4622D;
+      --color-primary-lt: #E8956D;
+      --color-cream: #F5C5A3;
+      --color-bright: #FEF0E6;
+
+      /* Special Accents */
+      --color-gold: #D4A853;
+      --color-rose: #C45C7A;
+
+      /* Glassmorphism */
+      --glass-bg: rgba(254, 240, 230, 0.07);
+      --glass-border: rgba(232, 149, 109, 0.2);
+      --glass-blur: blur(32px) saturate(160%);
+
+      /* Light Section Overrides */
+      --light-bg: #FEF0E6;
+      --light-surface: #F5C5A3;
+      --light-text: #1A0A00;
+      --light-text-muted: #8B3A00;
+
+      /* Typography */
+      --font-display: 'Playfair Display', serif;
+      --font-malayalam: 'Noto Sans Malayalam', sans-serif;
+      --font-subhead: 'Cormorant Garamond', serif;
+      --font-body: 'DM Sans', sans-serif;
+
+      /* Sizes */
+      --size-hero: clamp(4rem, 10vw, 9.5rem);
+      --size-section: clamp(2.5rem, 6vw, 6rem);
+    }
+
+    /* ========================================
+   RESET & BASE
+   ======================================== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: linear-gradient(180deg, #1A0A00 0%, #2A1204 50%, #1A0A00 100%);
+      color: var(--color-cream);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ========================================
+   NAVBAR — always-translucent glass
+   ======================================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1.1rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      /* always-on glass base */
+      background: rgba(26, 10, 0, 0.42);
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      border-bottom: 1px solid rgba(196, 98, 45, 0.18);
+      /* smooth colour interpolation driven by --nav-mix */
+      transition:
+        background 0.45s ease,
+        border-color 0.45s ease,
+        box-shadow 0.45s ease;
+      /* Visible from load — GSAP animates in on DOMContentLoaded */
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Light-section variant — swap to cream glass */
+    .navbar.light-nav {
+      background: rgba(245, 197, 163, 0.55);
+      border-bottom: 1px solid rgba(196, 98, 45, 0.22);
+      box-shadow: 0 2px 24px rgba(139, 58, 0, 0.08);
+    }
+
+    /* Logo & button colours adapt */
+    .navbar .navbar-logo {
+      color: var(--color-primary-lt);
+      transition: color 0.35s ease;
+    }
+
+    .navbar.light-nav .navbar-logo {
+      color: #6B2600;
+    }
+
+    .navbar .btn-ghost {
+      border-color: rgba(232, 149, 109, 0.7);
+      color: var(--color-primary-lt);
+      transition: all 0.2s ease;
+    }
+
+    .navbar.light-nav .btn-ghost {
+      border-color: #8B3A00;
+      color: #6B2600;
+    }
+
+    .navbar.light-nav .btn-ghost:hover {
+      background: #8B3A00;
+      color: var(--light-bg);
+    }
+
+    .navbar .btn-filled {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: var(--color-bright);
+      transition: all 0.25s ease;
+    }
+
+    .navbar.light-nav .btn-filled {
+      background: #6B2600;
+      border-color: #6B2600;
+      color: #FEF0E6;
+    }
+
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.5rem;
+    }
+
+    .navbar-logo .ml {
+      font-family: var(--font-malayalam);
+      font-size: 0.85rem;
+      opacity: 0.75;
+    }
+
+    .navbar-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid var(--color-primary-lt);
+      color: var(--color-primary-lt);
+      padding: 0.55rem 1.4rem;
+      border-radius: 50px;
+      font-family: var(--font-body);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-ghost:hover {
+      background: var(--color-primary-lt);
+      color: var(--color-bg);
+    }
+
+    .btn-filled {
+      background: var(--color-primary);
+      border: 1.5px solid var(--color-primary);
+      color: var(--color-bright);
+      padding: 0.55rem 1.4rem;
+      border-radius: 50px;
+      font-family: var(--font-body);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-filled:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(196, 98, 45, 0.38);
+    }
+
+    /* SVG Icons */
+    .svg-icon {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .svg-heart-filled {
+      fill: var(--color-rose);
+    }
+
+    .svg-heart-outline {
+      stroke: var(--color-rose);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .svg-star {
+      fill: var(--color-gold);
+    }
+
+    .svg-shield {
+      fill: var(--color-primary);
+    }
+
+    .svg-checkmark {
+      fill: var(--color-bright);
+    }
+
+    .svg-padlock-shackle {
+      stroke: var(--color-bright);
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .svg-padlock-body {
+      fill: var(--color-primary);
+    }
+
+    .svg-padlock-keyhole {
+      fill: #8B3A00;
+    }
+
+    /* ========================================
+   SECTIONS
+   ======================================== */
+    section {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      padding: 6rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .section-dark {
+      background: linear-gradient(180deg, #1A0A00 0%, #2A1204 50%, #3D1A00 100%);
+      color: var(--color-cream);
+    }
+
+    .section-light {
+      background: linear-gradient(180deg, #FEF0E6 0%, #F5C5A3 50%, #E8956D 100%);
+      color: var(--light-text);
+    }
+
+    /* Wave divider */
+    .wave-divider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      z-index: 10;
+    }
+
+    .wave-divider svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Rotated labels */
+    .rotated-label {
+      position: absolute;
+      left: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--color-primary);
+      white-space: nowrap;
+    }
+
+    /* ========================================
+   HERO SECTION
+   ======================================== */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .hero-blob {
+      position: absolute;
+      width: 60vw;
+      height: 60vw;
+      max-width: 700px;
+      max-height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139, 58, 0, 0.3) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      text-align: center;
+      z-index: 10;
+      padding: 2rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.5rem 1.25rem;
+      border: 1.5px solid var(--color-primary);
+      border-radius: 50px;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--color-primary-lt);
+      margin-bottom: 2rem;
+    }
+
+    .hero-heading {
+      font-family: var(--font-malayalam);
+      font-size: var(--size-hero);
+      font-weight: 700;
+      color: var(--color-primary-lt);
+      line-height: 1.05;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 40px rgba(212, 168, 83, 0.4);
+    }
+
+    .hero-heading-2 {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 700;
+      font-size: clamp(3.5rem, 8vw, 8rem);
+      color: var(--color-bright);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .hero-heading-3 {
+      font-family: var(--font-subhead);
+      font-style: italic;
+      font-size: clamp(1rem, 2vw, 1.6rem);
+      color: var(--color-primary);
+      margin-bottom: 2rem;
+    }
+
+    .hero-body {
+      font-family: var(--font-body);
+      color: var(--color-cream);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-primary);
+      font-size: 0.85rem;
+      animation: scrollBounce 1.2s ease-in-out infinite;
+    }
+
+    @keyframes scrollBounce {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(8px);
+      }
+    }
+
+    /* ========================================
+   FEATURES SECTION
+   ======================================== */
+    #features {
+      background: #F5C5A3;
+      padding-top: 8rem;
+      color: var(--light-text);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: rgba(254, 240, 230, 0.35);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      border: 1px solid rgba(232, 149, 109, 0.3);
+      border-radius: 20px;
+      padding: 2.25rem;
+      box-shadow: 0 8px 32px rgba(26, 10, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(70px);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(26, 10, 0, 0.18);
+    }
+
+    .feature-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(196, 98, 45, 0.15);
+      border: 1px solid var(--color-primary);
+      padding: 0.4rem 0.75rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      color: var(--light-text-muted);
+    }
+
+    .feature-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.8rem;
+      color: var(--light-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-title .ml {
+      font-family: var(--font-malayalam);
+      display: block;
+      font-size: 1.3rem;
+      color: var(--color-gold);
+      margin-bottom: 0.25rem;
+    }
+
+    .feature-sub {
+      font-family: var(--font-subhead);
+      font-style: italic;
+      color: var(--light-text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-text {
+      font-family: var(--font-body);
+      color: var(--light-text);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* ========================================
+   STORY SECTION
+   ======================================== */
+    #story {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .story-content {
+      max-width: 600px;
+      margin-left: 10%;
+      position: relative;
+      z-index: 5;
+    }
+
+    .story-watermark {
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-malayalam);
+      font-size: 20vw;
+      color: var(--color-gold);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .story-heading {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      color: var(--color-primary);
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .story-sub {
+      font-family: var(--font-subhead);
+      font-style: italic;
+      color: var(--color-primary);
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .story-body {
+      font-family: var(--font-body);
+      color: var(--color-cream);
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    .story-zauth {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--color-primary);
+      background: rgba(212, 168, 83, 0.12);
+      padding: 0.3rem 0.6rem;
+      border-radius: 50px;
+    }
+
+    /* ========================================
+   ZAUTH SECTION (DARK)
+   ======================================== */
+    #zauth {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .zauth-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .zauth-gradient {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 30%, var(--color-primary) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 70%, var(--color-surface2) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 60% at 50% 50%, var(--color-surface) 0%, var(--color-bg) 100%);
+      animation: meshShift 18s ease-in-out infinite;
+    }
+
+    @keyframes meshShift {
+
+      0%,
+      100% {
+        background-position: 20% 30%, 80% 70%, 50% 50%;
+      }
+
+      33% {
+        background-position: 70% 20%, 30% 80%, 60% 40%;
+      }
+
+      66% {
+        background-position: 40% 70%, 60% 30%, 30% 60%;
+      }
+    }
+
+    .zauth-content {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .zauth-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(254, 240, 230, 0.12);
+      border: 1px solid rgba(254, 240, 230, 0.25);
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      color: var(--color-bright);
+      margin-bottom: 2rem;
+    }
+
+    .zauth-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(3rem, 7vw, 7rem);
+      color: var(--color-bright);
+      line-height: 0.95;
+      margin-bottom: 1.5rem;
+    }
+
+    .zauth-sub {
+      font-family: var(--font-subhead);
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--color-gold);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+
+    .zauth-stats {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .stat-chip {
+      background: rgba(254, 240, 230, 0.08);
+      border: 1px solid rgba(212, 168, 83, 0.35);
+      border-radius: 100px;
+      padding: 0.75rem 1.5rem;
+      color: var(--color-bright);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-chip::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 80%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(254, 240, 230, 0.15), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.6s ease;
+    }
+
+    .stat-chip:hover::after {
+      left: 150%;
+    }
+
+    .zauth-link {
+      font-family: var(--font-subhead);
+      font-style: italic;
+      color: var(--color-gold);
+      font-size: 1.1rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+
+    .zauth-link:hover {
+      border-bottom-color: var(--color-gold);
+    }
+
+    /* ========================================
+   CONFESSIONS SECTION
+   ======================================== */
+    #confessions {
+      padding-top: 8rem;
+    }
+
+    .conf-watermark {
+      position: absolute;
+      right: 5%;
+      top: 10%;
+      font-family: var(--font-malayalam);
+      font-size: 12vw;
+      color: var(--color-gold);
+      opacity: 0.2;
+      pointer-events: none;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: var(--size-section);
+      color: var(--color-gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header .subtitle {
+      font-family: var(--font-subhead);
+      font-style: italic;
+      color: var(--color-primary);
+      font-size: 1.1rem;
+    }
+
+    .confession-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .testimonial-card {
+      background: rgba(254, 240, 230, 0.35);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      border: 1px solid rgba(232, 149, 109, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      opacity: 0;
+      transform: translateY(80px);
+    }
+
+    .testimonial-stars {
+      color: var(--color-gold);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .testimonial-quote {
+      font-family: var(--font-subhead);
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--light-text);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+
+    .testimonial-name {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .testimonial-footnote {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-style: italic;
+      color: var(--color-primary);
+    }
+
+    /* ========================================
+   HOW IT WORKS SECTION
+   ======================================== */
+    #how {
+      background: linear-gradient(180deg, var(--light-bg) 0%, #F0C9A0 100%);
+      padding-top: 8rem;
+      color: var(--light-text);
+    }
+
+    .steps-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .step {
+      display: flex;
+      gap: 4rem;
+      align-items: center;
+      margin-bottom: 6rem;
+      opacity: 0;
+      transform: translateY(50px);
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      padding: 3rem 2rem;
+    }
+
+    .step:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+
+    .step-number {
+      font-family: var(--font-display);
+      font-size: clamp(7rem, 18vw, 16rem);
+      color: var(--color-gold);
+      opacity: 0.12;
+      line-height: 1;
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      z-index: 0;
+      pointer-events: none;
+      font-style: italic;
+    }
+
+    .step:nth-child(even) .step-number {
+      right: auto;
+      left: 1rem;
+    }
+
+    /* Watermark image behind step */
+    .step-watermark {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: right center;
+      opacity: 0.38;
+      pointer-events: none;
+      z-index: 0;
+      filter: sepia(0.15) saturate(1.1) drop-shadow(0 4px 16px rgba(0, 0, 0, 0.08));
+    }
+
+    .step:nth-child(even) .step-watermark {
+      object-position: left center;
+    }
+
+    .step-content {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 2.5rem;
+      color: var(--light-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .step-sub {
+      font-family: var(--font-subhead);
+      font-style: italic;
+      color: var(--light-text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .step-text {
+      font-family: var(--font-body);
+      color: var(--light-text);
+      line-height: 1.7;
+    }
+
+    .step-visual {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+    }
+
+    .phone-mockup {
+      width: 140px;
+      height: 280px;
+      background: var(--color-primary);
+      border-radius: 20px;
+      padding: 8px;
+      box-shadow: 0 20px 40px rgba(26, 10, 0, 0.3);
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--color-bright);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .check-path {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+    }
+
+    /* ========================================
+   CTA SECTION — editorial, breathing room
+   ======================================== */
+    #cta {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: 8rem 2rem 0;
+    }
+
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 15%, rgba(196, 98, 45, 0.28) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 45% at 80% 85%, rgba(212, 168, 83, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 80% 60% at 50% 50%, rgba(61, 26, 0, 0.6) 0%, transparent 70%);
+      z-index: 0;
+    }
+
+    /* Decorative ambient ring */
+    .cta-bg::after {
+      content: '';
+      position: absolute;
+      width: 55vw;
+      height: 55vw;
+      max-width: 680px;
+      max-height: 680px;
+      border-radius: 50%;
+      border: 1px solid rgba(196, 98, 45, 0.1);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: inset 0 0 80px rgba(196, 98, 45, 0.06);
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 10;
+      max-width: 780px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .cta-label {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      color: var(--color-gold);
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .cta-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(3.8rem, 10vw, 10rem);
+      color: var(--color-bright);
+      line-height: 0.92;
+      margin-bottom: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-title .ml {
+      display: block;
+      font-family: var(--font-malayalam);
+      font-size: clamp(3rem, 8vw, 7.5rem);
+      color: var(--color-primary-lt);
+      margin-top: 0.15em;
+    }
+
+    .cta-subtitle {
+      font-family: var(--font-subhead);
+      font-style: italic;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      color: var(--color-gold);
+      margin-top: 2rem;
+      margin-bottom: 0;
+      opacity: 0.9;
+    }
+
+    .cta-note {
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-style: italic;
+      color: var(--color-primary);
+      margin-top: 1.25rem;
+      margin-bottom: 0;
+      max-width: 480px;
+      line-height: 1.6;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+      margin-bottom: 0;
+    }
+
+    /* Make CTA buttons bigger */
+    #cta .btn-filled,
+    #cta .btn-ghost {
+      padding: 0.85rem 2.2rem;
+      font-size: 1rem;
+    }
+
+    .cta-micro {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-style: italic;
+      color: var(--color-primary);
+      margin-top: 1rem;
+      margin-bottom: 0;
+      opacity: 0.75;
+    }
+
+    .cta-zauth {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(254, 240, 230, 0.07);
+      border: 1px solid rgba(212, 168, 83, 0.25);
+      padding: 0.45rem 1rem;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      color: var(--color-gold);
+      margin-top: 1.5rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* Footer — clean horizontal strip */
+    .cta-footer {
+      width: 100%;
+      margin-top: auto;
+      padding: 2.5rem 2.5rem 2.5rem;
+      border-top: 1px solid rgba(196, 98, 45, 0.14);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .cta-footer-logo {
+      font-family: var(--font-display);
+      font-style: italic;
+      color: var(--color-cream);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .cta-footer-copy {
+      opacity: 0.65;
+      text-align: center;
+      flex: 1;
+    }
+
+    .cta-social {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+    }
+
+    .cta-social a {
+      color: var(--color-primary);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+    }
+
+    .cta-social a:hover {
+      color: var(--color-gold);
+    }
+
+/* ========================================
+   MODAL
+   ======================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 10, 0, 0.68);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ========================================
+   ZAUTH QR MODAL
+   ======================================== */
+.zauth-qr-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 10, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.zauth-qr-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.zauth-qr-modal {
+  background: rgba(254, 240, 230, 0.12);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(254, 240, 230, 0.18);
+  border-radius: 24px;
+  padding: 2.5rem;
+  max-width: 360px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+}
+
+.zauth-qr-overlay.active .zauth-qr-modal {
+  transform: scale(1);
+}
+
+.zauth-qr-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.zauth-qr-close:hover {
+  transform: rotate(90deg);
+  color: var(--color-bright);
+}
+
+.zauth-qr-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.zauth-qr-header h3 {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--color-bright);
+  margin: 0;
+}
+
+.zauth-qr-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
+}
+
+.zauth-qr-container {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+
+.zauth-qr-container canvas {
+  display: block;
+}
+
+.zauth-qr-info {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-cream);
+  margin-bottom: 1.5rem;
+}
+
+.zauth-qr-info p {
+  margin: 0.3rem 0;
+}
+
+.zauth-qr-info strong {
+  color: var(--color-gold);
+}
+
+.zauth-qr-cancel {
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.zauth-qr-cancel:hover {
+  background: var(--color-primary);
+  color: var(--color-bright);
+}
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: rgba(254, 240, 230, 0.10);
+      backdrop-filter: blur(44px) saturate(160%);
+      -webkit-backdrop-filter: blur(44px) saturate(160%);
+      border: 1px solid rgba(254, 240, 230, 0.18);
+      border-radius: 24px;
+      padding: 3rem;
+      max-width: 420px;
+      width: 90%;
+      position: relative;
+      transform: scale(0.88);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow:
+        0 32px 80px rgba(26, 10, 0, 0.55),
+        inset 0 1px 0 rgba(254, 240, 230, 0.12);
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-heart {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      color: var(--color-rose);
+      animation: modalHeartFloat 1.2s ease-out forwards;
+    }
+
+    @keyframes modalHeartFloat {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-25px);
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      color: var(--color-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: transform 0.25s ease, color 0.25s ease;
+    }
+
+    .modal-close:hover {
+      transform: rotate(90deg);
+      color: var(--color-bright);
+    }
+
+    .modal-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      background: rgba(139, 58, 0, 0.2);
+      padding: 0.25rem;
+      border-radius: 50px;
+    }
+
+    .modal-tab {
+      flex: 1;
+      padding: 0.6rem;
+      border: none;
+      background: transparent;
+      color: var(--color-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 50px;
+      transition: all 0.25s ease;
+    }
+
+    .modal-tab.active {
+      background: var(--color-primary);
+      color: var(--color-bright);
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.8rem;
+      color: var(--color-bright);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-subtitle {
+      font-family: var(--font-subhead);
+      font-style: italic;
+      color: var(--color-primary);
+      text-align: center;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-form {
+      display: none;
+    }
+
+    .modal-form.active {
+      display: block;
+      animation: formFade 0.22s ease;
+    }
+
+    @keyframes formFade {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: rgba(139, 58, 0, 0.18);
+      border: 1px solid rgba(196, 98, 45, 0.4);
+      border-radius: 12px;
+      color: var(--color-bright);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input::placeholder {
+      color: var(--color-primary);
+    }
+
+    .form-input:focus {
+      border-color: var(--color-gold);
+      box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.2);
+    }
+
+    .modal-btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 50px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-top: 0.5rem;
+    }
+
+    .modal-btn-primary {
+      background: var(--color-primary);
+      color: var(--color-bright);
+    }
+
+    .modal-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(196, 98, 45, 0.4);
+    }
+
+    .modal-btn-zauth {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-surface2));
+      color: var(--color-bright);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-btn-zauth::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .modal-btn-zauth:hover::after {
+      left: 150%;
+    }
+
+    .modal-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.25rem 0;
+      color: var(--color-primary);
+      font-size: 0.85rem;
+    }
+
+    .modal-divider::before,
+    .modal-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(196, 98, 45, 0.3);
+    }
+
+    .modal-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--color-primary);
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+
+    .modal-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .modal-checkbox input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-primary);
+      margin-top: 2px;
+    }
+
+    .modal-checkbox label {
+      font-size: 0.8rem;
+      color: var(--color-primary);
+      cursor: pointer;
+    }
+
+    .modal-checkbox label span {
+      font-style: italic;
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    /* ========================================
+   REDUCED MOTION
+   ======================================== */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+
+      .navbar-logo {
+        font-size: 1.2rem;
+      }
+
+      .navbar-logo .ml {
+        display: none;
+      }
+
+      .navbar-links {
+        gap: 0.5rem;
+      }
+
+      .btn-ghost,
+      .btn-filled {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      .section {
+        padding: 4rem 1.25rem;
+      }
+
+      .rotated-label {
+        display: none;
+      }
+
+      .features-grid,
+      .confession-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .step {
+        flex-direction: column !important;
+        text-align: center;
+        gap: 1.5rem;
+      }
+
+      .step-number {
+        font-size: 4rem;
+        min-width: auto;
+        position: static;
+      }
+
+      .step-visual {
+        order: -1;
+      }
+
+      .zauth-stats {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .modal {
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ========================================
+     NAVBAR
+     ======================================== -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-logo">
+      <svg width="18" height="18" viewBox="0 0 32 30" fill="none"
+        style="display:inline-block;vertical-align:middle;margin-right:6px;">
+        <path d="M16 27 Q4 18 3 11 Q2 4 9 3 Q13 2 16 7 Q19 2 23 3 Q30 4 29 11 Q28 18 16 27 Z" fill="#C45C7A" />
+      </svg>
+      <span
+        style="font-family:'Sofia',cursive;font-weight:900;letter-spacing:0.02em;font-size:1.15em;">ente</span>&thinsp;<span
+        class="ml" style="font-family:'Noto Sans Malayalam',sans-serif;font-size:1.1em;font-weight:700;">ക്രഷ്</span>
+    </div>
+  </nav>
+
+  <!-- ========================================
+     SECTION 1 — HERO
+     ======================================== -->
+  <section id="hero" class="section-dark">
+    <div class="hero-blob"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 28" width="16" height="21" fill="none"
+          style="display:inline;vertical-align:middle;margin-right:4px;">
+          <path d="M6 12 Q6 4 12 4 Q18 4 18 12" stroke="#E8956D" stroke-width="2.5" stroke-linecap="round"
+            fill="none" />
+          <rect x="3" y="12" width="18" height="14" rx="4" fill="#C4622D" />
+          <circle cx="12" cy="18" r="3" fill="#8B3A00" />
+          <rect x="11" y="19" width="2" height="5" rx="1" fill="#8B3A00" />
+        </svg>
+        <span>ZAuth Verified</span>
+        <span>·</span>
+        <span>Real Humans Only</span>
+        <span>·</span>
+        <span>No Bots</span>
+        <span>·</span>
+        <span>Probably</span>
+      </div>
+
+      <h1 class="hero-heading">കണ്ടുമുട്ടൂ.</h1>
+      <h2 class="hero-heading-2">Fall in Love.</h2>
+      <p class="hero-heading-3">(Or at least try to. No promises. ZAuth can verify people, not chemistry.)</p>
+
+      <p class="hero-body">
+        Kerala's most self-aware dating app. Built for people who send 4-minute voice notes,
+        double-text 8 seconds later, and then say 'sorry, wrong chat.'
+        It wasn't the wrong chat. We all know.
+      </p>
+
+      <div class="hero-buttons">
+        <button class="btn-ghost" onclick="openModal('signin')">Sign In</button>
+        <button class="btn-filled" onclick="openModal('register')">Create Account</button>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>↓</span>
+      <span>Scroll. It gets better. Probably.</span>
+    </div>
+  </section>
+
+  <!-- ========================================
+     SECTION 2 — FEATURES
+     ======================================== -->
+  <section id="features" class="section-light">
+    <div class="wave-divider">
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+        <path d="M0,40 C360,80 1080,0 1440,40 V80 H0 Z" fill="#1A0A00" />
+      </svg>
+    </div>
+
+    <div class="rotated-label">[ WHY US ]</div>
+
+    <div class="section-header">
+      <h2>You came here.</h2>
+      <p class="subtitle">(That already shows better decision-making than your last relationship.)</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" data-index="0">
+        <div class="feature-badge">
+          <svg viewBox="0 0 16 18" width="14" height="16" fill="none"
+            style="display:inline;vertical-align:middle;margin-right:3px;">
+            <path d="M2 4 Q2 1 8 0 Q14 1 14 4 Q14 14 8 18 Q2 14 2 4 Z" fill="#C4622D" />
+            <path d="M4 5 L7 9 L12 3 L11 2 L7 8 L5 6 Z" fill="#FEF0E6" />
+          </svg>
+          <span>Powered by ZAuth</span>
+        </div>
+        <h3 class="feature-title">
+          <span class="ml">ZAuth ഉണ്ട്, ഭയം വേണ്ട.</span>
+          ZAuth Verified
+        </h3>
+        <p class="feature-sub">ZAuth is here. Fear not. (Finally.)</p>
+        <p class="feature-text">
+          Every single profile on Ente Crush is verified by ZAuth — our in-house identity system.
+          No bots. No catfish. No that-guy-who-uses-his-Labrador-as-his-profile-photo.
+          Just real Malayalis, with real feelings, and real commitment issues.
+          Progress, one swipe at a time.
+        </p>
+      </div>
+
+      <div class="feature-card" data-index="1">
+        <div class="feature-badge">
+          <span>Fate-Based Matching™</span>
+        </div>
+        <h3 class="feature-title">
+          <span class="ml">Algorithm? Illa. Vidhiyude Kayyil.</span>
+          Matches That Make Sense
+        </h3>
+        <p class="feature-sub">(No algorithm. It's in fate's hands. And partially your horoscope.)</p>
+        <p class="feature-text">
+          We match you based on your nakshatra, how long you take to reply to 'k',
+          and which Onam sadya item you serve yourself first.
+          Pappadam first = confident energy.
+          Payasam first = chaotic. We note this.
+          This is science. Peer-reviewed. Don't ask by who.
+        </p>
+      </div>
+
+      <div class="feature-card" data-index="2">
+        <div class="feature-badge">
+          <span>Voice Notes</span>
+        </div>
+        <h3 class="feature-title">Voice Note Compatibility™</h3>
+        <p class="feature-sub">(Aisha would pass immediately. You will try your best.)</p>
+        <p class="feature-text">
+          Record a voice note intro. Your match WILL judge:
+          — how you breathe between sentences
+          — whether you say 'umm' more than twice
+          — if you laugh at your own joke before finishing it
+          That's intimacy. That's Ente Crush. Welcome.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+     SECTION 3 — STORY
+     ======================================== -->
+  <section id="story" class="section-dark">
+    <div class="story-watermark">ക്രഷ്</div>
+
+    <div class="story-content">
+      <h2 class="story-heading">
+        It starts with a glance.<br>
+        Then a stare.<br>
+        Then 47 visits to their profile.
+      </h2>
+      <p class="story-sub">
+        Some people date for fun.<br>
+        I date like it's a government-approved long-term investment scheme.<br><br>
+        Zero returns. Full emotional tax.<br><br>
+        <em>Ente Crush — where the feelings are premium, and the closure is out of stock.</em>
+      </p>
+      <p class="story-body">
+        (ZAuth verified, so at least the heartbreak is real.)
+      </p>
+      <span class="story-zauth">
+        <svg viewBox="0 0 14 14" width="12" height="12" fill="none"
+          style="display:inline;vertical-align:middle;margin-right:3px;">
+          <circle cx="7" cy="7" r="6" fill="#D4A853" />
+          <path d="M4 7 L6 10 L10 5 L9 4 L6 8 L5 6 Z" fill="#FEF0E6" />
+        </svg>
+        ZAuth
+      </span>
+    </div>
+  </section>
+
+  <!-- ========================================
+     SECTION 4 — ZAUTH TRUST
+     ======================================== -->
+  <section id="zauth" class="section-dark">
+    <div class="zauth-bg">
+      <div class="zauth-gradient"></div>
+    </div>
+
+    <div class="zauth-content">
+      <div class="zauth-badge">
+        <svg viewBox="0 0 24 28" width="18" height="21" fill="none"
+          style="display:inline;vertical-align:middle;margin-right:5px;">
+          <path d="M6 12 Q6 4 12 4 Q18 4 18 12" stroke="#FEF0E6" stroke-width="2.5" stroke-linecap="round"
+            fill="none" />
+          <rect x="3" y="12" width="18" height="14" rx="4" fill="#C4622D" />
+          <circle cx="12" cy="18" r="3" fill="#8B3A00" />
+          <rect x="11" y="19" width="2" height="5" rx="1" fill="#8B3A00" />
+        </svg>
+        Secured by ZAuth
+      </div>
+
+      <h2 class="zauth-title">
+        Real People.<br>
+        Actually Real.
+      </h2>
+
+      <p class="zauth-sub">
+        ZAuth is the identity verification system behind every profile on Ente Crush.
+        Every person you see has been verified — real name, real face, real human being
+        who will very possibly leave you on read.
+        But at least they exist.
+        Getting ghosted by a real person is heartbreak.
+        Getting ghosted by a bot is a bug report.
+        We have eliminated the bug.
+        You're welcome.
+      </p>
+
+      <div class="zauth-stats">
+        <div class="stat-chip">
+          <svg viewBox="0 0 14 14" width="12" height="12" fill="none"
+            style="display:inline;vertical-align:middle;margin-right:3px;">
+            <circle cx="7" cy="7" r="6" fill="#D4A853" />
+            <path d="M4 7 L6 10 L10 5 L9 4 L6 8 L5 6 Z" fill="#FEF0E6" />
+          </svg>
+          100% Verified Profiles
+        </div>
+        <div class="stat-chip">0 Catfish. Zero. Sifr. ഒന്നുമില്ല.</div>
+        <div class="stat-chip">
+          <svg viewBox="0 0 14 14" width="12" height="12" fill="none"
+            style="display:inline;vertical-align:middle;margin-right:3px;">
+            <circle cx="7" cy="7" r="6" fill="#D4A853" />
+            <path d="M4 7 L6 10 L10 5 L9 4 L6 8 L5 6 Z" fill="#FEF0E6" />
+          </svg>
+          ZAuth Protected
+        </div>
+      </div>
+
+      <a href="#" class="zauth-link">Learn more about ZAuth →</a>
+    </div>
+  </section>
+
+  <!-- ========================================
+     SECTION 5 — CONFESSIONS
+     ======================================== -->
+  <section id="confessions" class="section-light">
+    <div class="wave-divider">
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+        <path d="M0,40 C360,80 1080,0 1440,40 V80 H0 Z" fill="#1A0A00" />
+      </svg>
+    </div>
+
+    <div class="conf-watermark">ആളുകൾ</div>
+
+    <div class="section-header">
+      <h2>ആളുകൾ പറഞ്ഞത്</h2>
+      <p class="subtitle">(We may have exaggerated slightly. Or completely. ZAuth verified the people, not the stories.)
+      </p>
+    </div>
+
+    <div class="confession-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <p class="testimonial-quote">
+          "Ente Crush-ൽ match ആയി. 3 weeks later അവൾ 'just friends' ആണെന്ന് പറഞ്ഞു.
+          But ZAuth verified cheshu she's 100% real, so technically the app delivered exactly what it promised."
+        </p>
+        <p class="testimonial-name">— Arun M., Thrissur</p>
+        <p class="testimonial-footnote">5 stars. It wasn't a bot that broke my heart. That's growth.</p>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <p class="testimonial-quote">
+          "No fake profiles. My match was very real. TOO real.
+          He knew my moon sign before my last name.
+          He brought it up ON THE FIRST DATE with the energy of a man who had prepared.
+          I'm scared. I have a second date on Saturday."
+        </p>
+        <p class="testimonial-name">— Sreelakshmi P., Kochi</p>
+        <p class="testimonial-footnote">ZAuth verified. Astrology unverified. Both equally important apparently.</p>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" style="display:inline;">
+            <path d="M10 2 L12 7 L18 7 L13 11 L15 17 L10 13 L5 17 L7 11 L2 7 L8 7 Z" fill="#D4A853" stroke="#D4A853"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <p class="testimonial-quote">
+          "I sent a voice note. He laughed — not at it, WITH it.
+          Laughed the way Mohanlal laughs. Effortless. Like he had always been laughing.
+          I married him.
+          I blame the voice note. I blame ZAuth for confirming he was real.
+          I blame nothing. I'm happy. Disgusting."
+        </p>
+        <p class="testimonial-name">— Devika R., Kozhikode</p>
+        <p class="testimonial-footnote">Voice notes: statistically dangerous. Highly recommend.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+     SECTION 6 — HOW IT WORKS
+     ======================================== -->
+  <section id="how" class="section-light">
+    <div class="rotated-label">[ HOW THIS WORKS ]</div>
+
+    <div class="section-header">
+      <h2>Three Steps</h2>
+    </div>
+
+    <div class="steps-container">
+      <div class="step" data-index="0">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3 class="step-title">ആദ്യം, ഒരു step.</h3>
+          <p class="step-sub">First, one step. (Just one. Unlike what's coming after.)</p>
+          <p class="step-text">
+            Create your account. ZAuth verifies you're a real human in under 30 seconds.
+            It is the fastest commitment you will make this year.
+            Cherish it.
+          </p>
+        </div>
+        <div class="step-visual">
+          <div class="phone-mockup">
+            <div class="phone-screen">
+              <svg width="60" height="60" viewBox="0 0 60 60">
+                <path d="M30 5 L55 15 L55 35 Q55 50 30 55 Q5 50 5 35 L5 15 Z" fill="#C4622D" />
+                <path class="check-path" d="M15 30 L25 40 L45 20" stroke="#FEF0E6" stroke-width="4" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" data-index="1">
+        <div class="step-number">2</div>
+        <img src="img-step2-selfie.png" class="step-watermark" alt="" aria-hidden="true">
+        <div class="step-content">
+          <h3 class="step-title">നിന്നെക്കുറിച്ച് പറയൂ.</h3>
+          <p class="step-sub">(Tell us about yourself. Honestly. Or entertainingly. Preferably both.)</p>
+          <p class="step-text">
+            Photos where you look like yourself.
+            A bio that doesn't start with 'I love to laugh' — everyone loves to laugh,
+            that's not a personality, that's a human function.
+            Your favorite Onam sadya dish.
+            A voice note where you say something normal.
+            Good luck.
+          </p>
+        </div>
+        <div class="step-visual">
+          <svg width="100" height="140" viewBox="0 0 100 140">
+            <rect x="10" y="10" width="80" height="120" rx="12" fill="rgba(254,240,230,0.35)" stroke="#C4622D"
+              stroke-width="1" />
+            <circle cx="50" cy="45" r="20" fill="#C4622D" />
+            <ellipse cx="50" cy="100" rx="25" ry="20" fill="#C4622D" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="step" data-index="2">
+        <div class="step-number">3</div>
+        <img src="img-step3-angel.png" class="step-watermark" alt="" aria-hidden="true">
+        <div class="step-content">
+          <h3 class="step-title">ബാക്കി... vidhiyude kayyil.</h3>
+          <p class="step-sub">(The rest is in fate's hands. And partially yours. Mostly fate's.)</p>
+          <p class="step-text">
+            We show you real, ZAuth-verified people.
+            You will overthink your opening message.
+            You will write 'Hey' and delete it 4 times.
+            You will send 'Hey'.
+            And somehow, improbably, wonderfully — sometimes it works.
+            The Vineeth-Aisha moment is possible.
+            Probably. ZAuth can verify the person. The rest is on you.
+          </p>
+        </div>
+        <div class="step-visual">
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <svg width="28" height="28" viewBox="0 0 24 28" fill="none">
+              <rect x="4" y="2" width="16" height="24" rx="3" fill="#3D1A00" />
+              <rect x="6" y="4" width="12" height="16" rx="1" fill="#1A0A00" />
+              <circle cx="12" cy="22" r="1.5" fill="#E8956D" />
+            </svg>
+            <svg width="30" height="30" viewBox="0 0 32 30" fill="none">
+              <path d="M16 27 Q4 18 3 11 Q2 4 9 3 Q13 2 16 7 Q19 2 23 3 Q30 4 29 11 Q28 18 16 27 Z" fill="#C45C7A" />
+            </svg>
+            <svg width="28" height="28" viewBox="0 0 32 30" fill="none">
+              <path d="M16 27 Q4 18 3 11 Q2 4 9 3 Q13 2 16 7 Q19 2 23 3 Q30 4 29 11 Q28 18 16 27 Z" fill="#C45C7A"
+                opacity="0.6" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+     SECTION 7 — CTA CLOSING
+     ======================================== -->
+  <section id="cta" class="section-dark">
+    <div class="cta-bg"></div>
+
+    <div class="cta-content">
+      <p class="cta-label">[ ഇനി? ]</p>
+
+      <h2 class="cta-title">
+        <span class="ml">കിനാവ് കാണൂ.</span>
+      </h2>
+      <p class="cta-subtitle">Fall in love. Or something adjacent to it.</p>
+
+      <p class="cta-note">
+        (ZAuth has done its part. The rest is on you. No pressure. All the pressure.)
+      </p>
+
+      <div class="cta-buttons">
+        <button class="btn-filled" style="background:var(--color-bright);color:var(--color-bg);"
+          onclick="openModal('register')">Create Free Account</button>
+        <button class="btn-ghost" style="border-color:var(--color-bright);color:var(--color-bright);"
+          onclick="openModal('signin')">Sign In</button>
+      </div>
+
+      <p class="cta-micro">
+        Verified by ZAuth. Protected by fate. Covered by bad WiFi and genuinely good intentions.
+      </p>
+
+      <span class="cta-zauth">
+        <svg viewBox="0 0 24 28" width="16" height="21" fill="none"
+          style="display:inline;vertical-align:middle;margin-right:4px;">
+          <path d="M6 12 Q6 4 12 4 Q18 4 18 12" stroke="#D4A853" stroke-width="2.5" stroke-linecap="round"
+            fill="none" />
+          <rect x="3" y="12" width="18" height="14" rx="4" fill="#C4622D" />
+          <circle cx="12" cy="18" r="3" fill="#8B3A00" />
+          <rect x="11" y="19" width="2" height="5" rx="1" fill="#8B3A00" />
+        </svg>
+        Every profile verified by ZAuth
+      </span>
+    </div>
+
+    <footer class="cta-footer">
+      <div class="cta-footer-logo">
+        <svg width="15" height="15" viewBox="0 0 34 32" fill="none">
+          <path d="M17 29 Q5 20 4 12 Q2 4 10 3 Q14 2 17 8 Q20 2 24 3 Q32 4 30 12 Q29 20 17 29 Z" stroke="#C45C7A"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        </svg>
+        Ente Crush
+      </div>
+      <div class="cta-footer-copy">© 2025 · Built with love and mild trust issues · ZAuth Verified</div>
+      <div class="cta-social">
+        <a href="#">Instagram</a>
+        <a href="#">Twitter</a>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ========================================
+     AUTH MODAL
+     ======================================== -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <span class="modal-heart">
+        <svg width="18" height="18" viewBox="0 0 32 30" fill="none">
+          <path d="M16 27 Q4 18 3 11 Q2 4 9 3 Q13 2 16 7 Q19 2 23 3 Q30 4 29 11 Q28 18 16 27 Z" fill="#C45C7A" />
+        </svg>
+      </span>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="signin">Sign In</button>
+        <button class="modal-tab" data-tab="register">Register</button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form class="modal-form active" id="form-signin" onsubmit="handleSubmit(event)">
+        <h3 class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 34 32" fill="none"
+            style="display:inline;vertical-align:middle;margin-right:5px;">
+            <path d="M17 29 Q5 20 4 12 Q2 4 10 3 Q14 2 17 8 Q20 2 24 3 Q32 4 30 12 Q29 20 17 29 Z" stroke="#C45C7A"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+          </svg>
+          Welcome back
+        </h3>
+        <p class="modal-subtitle">Or as they say — 'Thudarunnathu nannayirunnu.' (It was good that you continued.)</p>
+
+        <div class="form-group">
+          <input type="email" class="form-input" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-input" placeholder="Password" required>
+        </div>
+
+        <button type="submit" class="modal-btn modal-btn-primary">Sign In</button>
+
+        <div class="modal-divider">— or —</div>
+
+        <button type="button" class="modal-btn modal-btn-zauth" onclick="handleZAuth()">
+          <svg viewBox="0 0 24 28" width="16" height="21" fill="none"
+            style="display:inline;vertical-align:middle;margin-right:5px;">
+            <path d="M6 12 Q6 4 12 4 Q18 4 18 12" stroke="#FEF0E6" stroke-width="2.5" stroke-linecap="round"
+              fill="none" />
+            <rect x="3" y="12" width="18" height="14" rx="4" fill="#C4622D" />
+            <circle cx="12" cy="18" r="3" fill="#8B3A00" />
+            <rect x="11" y="19" width="2" height="5" rx="1" fill="#8B3A00" />
+          </svg>
+          Continue with ZAuth
+        </button>
+
+        <p class="modal-footer">
+          ZAuth verifies your identity so your match knows you're real.
+          Novel concept in dating. We know.
+        </p>
+      </form>
+
+      <!-- Register Form -->
+      <form class="modal-form" id="form-register" onsubmit="handleSubmit(event)">
+        <h3 class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 34 32" fill="none"
+            style="display:inline;vertical-align:middle;margin-right:5px;">
+            <path d="M17 29 Q5 20 4 12 Q2 4 10 3 Q14 2 17 8 Q20 2 24 3 Q32 4 30 12 Q29 20 17 29 Z" stroke="#C45C7A"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+          </svg>
+          Join Ente Crush
+        </h3>
+        <p class="modal-subtitle">One small step for you. One giant leap for your love life.</p>
+
+        <div class="form-group">
+          <input type="text" class="form-input" placeholder="Name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" class="form-input" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-input" placeholder="Password" required>
+        </div>
+
+        <button type="submit" class="modal-btn modal-btn-primary">Create Account</button>
+
+        <div class="modal-divider">— or —</div>
+
+        <button type="button" class="modal-btn modal-btn-zauth" onclick="handleZAuth()">
+          <svg viewBox="0 0 24 28" width="16" height="21" fill="none"
+            style="display:inline;vertical-align:middle;margin-right:5px;">
+            <path d="M6 12 Q6 4 12 4 Q18 4 18 12" stroke="#FEF0E6" stroke-width="2.5" stroke-linecap="round"
+              fill="none" />
+            <rect x="3" y="12" width="18" height="14" rx="4" fill="#C4622D" />
+            <circle cx="12" cy="18" r="3" fill="#8B3A00" />
+            <rect x="11" y="19" width="2" height="5" rx="1" fill="#8B3A00" />
+          </svg>
+          Register with ZAuth
+        </button>
+
+        <div class="modal-checkbox">
+          <input type="checkbox" id="terms" required>
+          <label for="terms">I have read the terms and conditions. <span>(You haven't. It's fine.)</span></label>
+        </div>
+
+        <p class="modal-footer">
+          ZAuth-registered profiles get the
+          <svg viewBox="0 0 14 14" width="12" height="12" fill="none"
+            style="display:inline;vertical-align:middle;margin-right:3px;">
+            <circle cx="7" cy="7" r="6" fill="#D4A853" />
+            <path d="M4 7 L6 10 L10 5 L9 4 L6 8 L5 6 Z" fill="#FEF0E6" />
+          </svg>
+          badge.
+          Because trust is the original dating hack.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ZAuth QR Modal -->
+  <div class="zauth-qr-overlay" id="zauth-qr-modal">
+    <div class="zauth-qr-modal">
+      <button class="zauth-qr-close" onclick="closeZAuthQR()" aria-label="Close">×</button>
+      
+      <div class="zauth-qr-header">
+        <svg viewBox="0 0 24 28" width="24" height="28" fill="none" style="display:inline;vertical-align:middle;margin-right:8px;">
+          <path d="M6 12 Q6 4 12 4 Q18 4 18 12" stroke="#D4A853" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <rect x="3" y="12" width="18" height="14" rx="4" fill="#C4622D"/>
+          <circle cx="12" cy="18" r="3" fill="#8B3A00"/>
+          <rect x="11" y="19" width="2" height="5" rx="1" fill="#8B3A00"/>
+        </svg>
+        <h3>Verify with ZAuth</h3>
+      </div>
+      
+      <p class="zauth-qr-subtitle">Scan this QR code with your ZAuth wallet app</p>
+      
+      <div class="zauth-qr-container">
+        <canvas id="zauth-qr-canvas"></canvas>
+      </div>
+      
+      <div class="zauth-qr-info">
+        <p><strong>Verifier:</strong> <span id="zauth-verifier">Ente Crush</span></p>
+        <p><strong>Time remaining:</strong> <span id="zauth-countdown">60</span>s</p>
+      </div>
+      
+      <button class="zauth-qr-cancel" onclick="closeZAuthQR()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  
+  <!-- ZAuth SDK -->
+  <script src="https://unpkg.com/@zero-auth/sdk@1.0.0/dist/zero-auth-sdk.umd.js"></script>
+  
+  <script>
+    // Configure ZAuth
+    window.ZeroAuthConfig = {
+      relayUrl: 'https://zeroauth-relay.onrender.com',
+      verifierName: 'Ente Crush'
+    };
+  </script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    // ========================================
+    // INITIALIZATION
+    // ========================================
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Set initial states
+      gsap.set('.navbar', { opacity: 1, y: 0 });
+
+      // Set initial states
+      gsap.set('.navbar', { opacity: 1, y: 0 });
+
+      if (prefersReducedMotion) {
+        gsap.set('.feature-card, .testimonial-card, .step', { opacity: 1, y: 0 });
+        return;
+      }
+
+      // Page load timeline
+      const loadTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      loadTl
+        .to('.navbar', { y: 0, opacity: 1, duration: 0.5 })
+        .from('.hero-badge', { y: 20, opacity: 0, duration: 0.6 }, 0.3)
+        .from('.hero-heading', { y: 60, opacity: 0, duration: 0.8 }, 0.4)
+        .from('.hero-heading-2', { y: 50, opacity: 0, duration: 0.8 }, 0.5)
+        .from('.hero-heading-3', { y: 20, opacity: 0, duration: 0.6 }, 0.7)
+        .from('.hero-body', { y: 24, opacity: 0, duration: 0.6 }, 0.8)
+        .from('.hero-buttons', { y: 20, opacity: 0, stagger: 0.1, duration: 0.5 }, 0.9)
+        .from('.scroll-indicator', { opacity: 0, duration: 0.4 }, 1.1);
+
+      // Navbar: dynamic light/dark glass based on visible section
+      const navbar = document.getElementById('navbar');
+      const lightSections = document.querySelectorAll('.section-light');
+      const navObserver = new IntersectionObserver((entries) => {
+        let anyLight = false;
+        entries.forEach(entry => {
+          if (entry.isIntersecting) anyLight = true;
+        });
+        // check all light sections — if any is >30% visible, go light
+        let lightVisible = false;
+        lightSections.forEach(sec => {
+          const rect = sec.getBoundingClientRect();
+          const winH = window.innerHeight;
+          const overlap = Math.max(0, Math.min(rect.bottom, winH) - Math.max(rect.top, 0));
+          if (overlap / winH > 0.18) lightVisible = true;
+        });
+        navbar.classList.toggle('light-nav', lightVisible);
+      }, { threshold: [0, 0.1, 0.2, 0.3, 0.5], rootMargin: '0px' });
+      lightSections.forEach(sec => navObserver.observe(sec));
+
+      // Hero blob parallax
+      gsap.to('.hero-blob', {
+        yPercent: 20,
+        ease: 'none',
+        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 }
+      });
+
+      // Feature cards reveal
+      gsap.utils.toArray('.feature-card').forEach((card, i) => {
+        gsap.to(card, {
+          opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none reverse' },
+          delay: i * 0.15
+        });
+      });
+
+      // ZAuth gradient
+      gsap.to('.zauth-gradient', {
+        scale: 1.1, rotation: 3, duration: 18, ease: 'sine.inOut',
+        scrollTrigger: { trigger: '#zauth', start: 'top bottom', end: 'bottom top', scrub: true }
+      });
+
+      // Testimonial cards
+      gsap.utils.toArray('.testimonial-card').forEach((card, i) => {
+        gsap.to(card, {
+          opacity: 1, y: 0, duration: 0.85, ease: 'power3.out',
+          scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none reverse' },
+          delay: i * 0.2
+        });
+      });
+
+      // Steps reveal
+      gsap.utils.toArray('.step').forEach((step) => {
+        gsap.to(step, {
+          opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: step, start: 'top 85%', toggleActions: 'play none none reverse' }
+        });
+      });
+
+      // Checkmark draw
+      gsap.fromTo('.check-path',
+        { strokeDasharray: 100, strokeDashoffset: 100 },
+        {
+          strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut',
+          scrollTrigger: { trigger: '#how', start: 'top 60%', toggleActions: 'play none none none' }
+        }
+      );
+    });
+
+    // ========================================
+    // MODAL FUNCTIONALITY
+    // ========================================
+    const modal = document.getElementById('modal');
+    const modalTabs = document.querySelectorAll('.modal-tab');
+    const modalForms = document.querySelectorAll('.modal-form');
+    let lastFocusedElement = null;
+
+    function openModal(tab = 'signin') {
+      lastFocusedElement = document.activeElement;
+      modalTabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+      modalForms.forEach(f => f.classList.toggle('active', f.id === `form-${tab}`));
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        const firstInput = modalForms[tab === 'signin' ? 0 : 1].querySelector('input');
+        if (firstInput) firstInput.focus();
+      }, 100);
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      if (lastFocusedElement) lastFocusedElement.focus();
+    }
+
+    modalTabs.forEach(tab => {
+      tab.addEventListener('click', () => openModal(tab.dataset.tab));
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+    });
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      alert('This is a demo! In production, this would connect to your backend.');
+    }
+
+    function handleZAuth() {
+      closeModal();
+      startZAuthVerification();
+    }
+    
+    // ZAuth Verification State
+    let zauthState = {
+      sessionId: null,
+      pollTimer: null,
+      countdownTimer: null
+    };
+    
+    function openZAuthQR() {
+      const modal = document.getElementById('zauth-qr-modal');
+      modal.classList.add('active');
+    }
+    
+    function closeZAuthQR() {
+      const modal = document.getElementById('zauth-qr-modal');
+      modal.classList.remove('active');
+      
+      // Clear timers
+      if (zauthState.pollTimer) {
+        clearInterval(zauthState.pollTimer);
+        zauthState.pollTimer = null;
+      }
+      if (zauthState.countdownTimer) {
+        clearInterval(zauthState.countdownTimer);
+        zauthState.countdownTimer = null;
+      }
+    }
+    
+    async function startZAuthVerification() {
+      const relayUrl = 'https://zeroauth-relay.onrender.com';
+      const verifierName = 'Ente Crush';
+      
+      try {
+        // Create session
+        const response = await fetch(`${relayUrl}/api/v1/sessions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            verifier_name: verifierName,
+            credential_type: 'Age Verification',
+            required_claims: ['birth_year', 'country'],
+            timeout: 60
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to create session');
+        }
+        
+        const { session_id, qr_payload } = await response.json();
+        zauthState.sessionId = session_id;
+        
+        // Generate QR code
+        const canvas = document.getElementById('zauth-qr-canvas');
+        await QRCode.toCanvas(canvas, qr_payload, {
+          width: 200,
+          margin: 1,
+          color: {
+            dark: '#1A0A00',
+            light: '#FFFFFF'
+          }
+        });
+        
+        // Show modal
+        openZAuthQR();
+        
+        // Start countdown
+        let timeLeft = 60;
+        document.getElementById('zauth-countdown').textContent = timeLeft;
+        
+        zauthState.countdownTimer = setInterval(() => {
+          timeLeft--;
+          document.getElementById('zauth-countdown').textContent = timeLeft;
+          if (timeLeft <= 0) {
+            clearInterval(zauthState.countdownTimer);
+            closeZAuthQR();
+            alert('Verification timed out. Please try again.');
+          }
+        }, 1000);
+        
+        // Start polling
+        zauthState.pollTimer = setInterval(async () => {
+          try {
+            const statusRes = await fetch(`${relayUrl}/api/v1/sessions/${session_id}`);
+            if (statusRes.ok) {
+              const session = await statusRes.json();
+              if (session.status === 'COMPLETED') {
+                clearInterval(zauthState.pollTimer);
+                clearInterval(zauthState.countdownTimer);
+                closeZAuthQR();
+                alert('Verification successful! Welcome to Ente Crush.');
+              }
+            }
+          } catch (e) {
+            // Keep polling
+          }
+        }, 2000);
+        
+      } catch (error) {
+        console.error('ZAuth error:', error);
+        alert('Failed to start verification. Please try again.');
+      }
+    }
+
+    // Resize handler
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 150);
+    });
+  </script>
+</body>
+
+</html>
